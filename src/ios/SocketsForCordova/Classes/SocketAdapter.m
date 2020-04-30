@@ -21,15 +21,6 @@
 #include <math.h>
 #import "SocketAdapter.h"
 
-CFReadStreamRef readStream;
-CFWriteStreamRef writeStream;
-
-NSInputStream *inputStream;
-NSOutputStream *outputStream;
-
-NSTimer *openTimer;
-NSTimer *writeTimer;
-
 BOOL wasOpenned = FALSE;
 
 int const WRITE_BUFFER_SIZE = 10 * 1024;
@@ -232,6 +223,11 @@ int writeTimeoutSeconds = 5.0;
         [self writeSubarray:dataArray offset:i * WRITE_BUFFER_SIZE length:WRITE_BUFFER_SIZE];
     }
     int lastBatchPosition = (numberOfBatches - 1) * WRITE_BUFFER_SIZE;
+
+    if(writeTimer != nil){
+        [writeTimer invalidate];
+        NSLog(@"[NATIVE] writeTimer invalidate on re-entrant write");
+    }
 
     NSTimer *timer = [NSTimer timerWithTimeInterval:writeTimeoutSeconds target:self selector:@selector(onWriteTimeout:) userInfo:nil repeats:NO];
     [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];

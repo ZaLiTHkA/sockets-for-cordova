@@ -69,11 +69,11 @@
     self.socketAdapter.closeEventHandler = ^ void (BOOL hasErrors) {
         NSLog(@"socket closed");
     };
-    self.socketAdapter.errorHandler = ^ void (NSString *error){
+    self.socketAdapter.errorEventHandler = ^ void (NSString *error, NSString *error2){
         NSLog(@"socket error: %@", error);
     };
     
-    [self.socketAdapter connect:@"69.36.243.188" port:[NSNumber numberWithInt:5000]];
+    [self.socketAdapter open:@"69.36.243.188" port:[NSNumber numberWithInt:5000]];
     
     
     NSData* dataJson = [@"[1,2,3,10]" dataUsingEncoding:NSUTF8StringEncoding];
